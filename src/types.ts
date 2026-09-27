@@ -1,0 +1,14 @@
+export type Language = 'kn' | 'te';
+export type Course = { id: Language; name: string; native: string; familiar: Language };
+export type Phrase = { en: string; kn: string; te: string; knr: string; ter: string };
+export type VocabularyItem = Phrase & { id: string; day: number; example: Phrase; variants?: Partial<Record<Language, string[]>> };
+export type GrammarPattern = { id: string; title: string; notes: Record<Language, string>; examples: Phrase[] };
+export type Lesson = { id: string; day: number; title: string; category: string; objective: string; reviewDays: number[]; words: VocabularyItem[]; grammar: GrammarPattern; dialogue: Phrase[]; prompt: string; check: string; status: 'draft' | 'reviewed'; sources: string[] };
+export type QuestionKind = 'choice' | 'recall' | 'build' | 'gap' | 'translate' | 'match';
+export type Question = { id: string; day: number; itemId: string; kind: QuestionKind; prompt: string; clue?: string; answers: string[]; choices: string[]; pairs: { left: string; right: string }[]; tiles: string[]; required: string[]; phrase: Phrase; explanation: string };
+export type QuizDefinition = { id: string; course: Language; days: number[]; version: string; questions: Question[] };
+export type Response = { value: string; correct: boolean; skipped: boolean; at: string };
+export type QuizAttempt = { id: string; definition: QuizDefinition; scored: boolean; reason: string; lessonDay?: number; parentId?: string; startedAt: string; finishedAt?: string; status: 'active' | 'completed'; index: number; responses: Record<string, Response>; draft: string; score: number };
+export type ReviewItem = { stage: number; due: string; misses: number; lastRecall?: string };
+export type CourseProgress = { lessons: Record<string, { step: number; complete: boolean; practiceDone?: boolean; note?: string }>; saved: string[]; reviews: Record<string, ReviewItem>; active?: QuizAttempt; history: QuizAttempt[] };
+export type LearnerProgress = { schema: 1; name: string; onboarded: boolean; course: Language; courses: Record<Language, CourseProgress>; reports: { id: string; course: Language; questionId: string; answer: string; at: string }[] };
